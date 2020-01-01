@@ -30,11 +30,11 @@ public class TriggerEnter : MonoBehaviour
          //if(col.tag == "Player")
         System.Random rnd = new System.Random();
         //taskNum = rnd.Next(1, 5); 
-        GetAnswer(taskNum);//TODO Read task from DB
+        GetAnswer(taskKit, taskNum);//TODO Read task from DB
             aTexture2DQuestion = new Texture2D(830, 200);
             aTexture2DQuestion.LoadImage(filedataQuestion);
-            aTexture2DAnswer = new Texture2D(16, 16);
-            aTexture2DAnswer.LoadImage(filedataAnswer);
+            /* aTexture2DAnswer = new Texture2D(16, 16);
+            aTexture2DAnswer.LoadImage(filedataAnswer); */
             aTexture2DHint = new Texture2D(900, 800);
             aTexture2DHint.LoadImage(filedataHint);
 
@@ -66,7 +66,8 @@ public class TriggerEnter : MonoBehaviour
      public string userAnswer = "Enter Answer Here";
      public string rightAnswer;
      private string dbPath;
-     public int taskNum; // TODO get from object settings 
+     public int taskNum;
+     public string taskKit; 
      public GUISkin customSkin;
     void OnGUI () {
         GUI.skin = customSkin;
@@ -165,19 +166,31 @@ public class TriggerEnter : MonoBehaviour
                                     "  'solution' BLOB NOT NULL," +
                                     "  'answer' TEXT NOT NULL" +									  
                                     ");";
-
+/*CREATE TABLE quest (
+    kit      VARCHAR,
+    id       INTEGER,
+    question BLOB    NOT NULL,
+    solution BLOB    NOT NULL,
+    hint     BLOB    NOT NULL,
+    answer   TEXT    NOT NULL,
+    PRIMARY KEY (kit, id)
+); */
                 var result = cmd.ExecuteNonQuery();
                 Debug.Log("create schema: " + result);
             }
         }
     }
 
-    public void GetAnswer(int taskNum) {
+    public void GetAnswer(string taskKit, int taskNum) {
         using (var conn = new SqliteConnection(dbPath)) {
             conn.Open();
             using (var cmd = conn.CreateCommand()) {
                 cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "SELECT * FROM quest WHERE id = @taskNum;";
+                cmd.CommandText = "SELECT * FROM quest WHERE kit = @taskKit and id = @taskNum;";
+                cmd.Parameters.Add(new SqliteParameter {
+                    ParameterName = "taskKit",
+                    Value = taskKit
+                });
 
                 cmd.Parameters.Add(new SqliteParameter {
                     ParameterName = "taskNum",
@@ -187,9 +200,9 @@ public class TriggerEnter : MonoBehaviour
                 Debug.Log("answer (begin)");
                 var reader = cmd.ExecuteReader();
                 while (reader.Read()) {
-                    var id = reader.GetInt32(0);
-                    Stream question = reader.GetStream(1);
-                    Stream answers = reader.GetStream(2);
+                    var kit = reader.GetString(0);
+                    var id = reader.GetInt32(1);
+                    Stream question = reader.GetStream(2);
                     Stream solution = reader.GetStream(3);
                     Stream hint = reader.GetStream(4);
                     var answer = reader.GetString(5);
@@ -198,7 +211,7 @@ public class TriggerEnter : MonoBehaviour
                     rightAnswer = answer;
                     hint.Read(filedataHint, 0, (int )hint.Length);
                     question.Read(filedataQuestion, 0, (int )question.Length);
-                    answers.Read(filedataAnswer, 0, (int )answers.Length);
+                    //answers.Read(filedataAnswer, 0, (int )answers.Length);
                 }
                 Debug.Log("answer (end)");
             }
