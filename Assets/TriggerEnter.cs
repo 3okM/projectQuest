@@ -47,13 +47,13 @@ public class TriggerEnter : MonoBehaviour
             filedataAnswer = File.ReadAllBytes(filepathAnswer);
         } */
         Open();
-        Hint();
     }
          // 200x300 px window will apear in the center of the screen.
      // Only show it if needed.
      private Rect windowRect = new Rect ((Screen.width - 1000)/2-500, (Screen.height - 800)/2, 1000, 800);
      private bool show = false;
-     private bool showHint = false;
+     public bool showHint = true;
+     public bool showHintGlobalChange = true;
      public int questionHeight = 800;
      public int hintHeight = 100;
      public int answersHeight = 100;
@@ -68,16 +68,22 @@ public class TriggerEnter : MonoBehaviour
      private string dbPath;
      public int taskNum;
      public string taskKit; 
-     public GUISkin customSkin;
+     //public GUISkin customSkin;
+     public GUIStyle answerGuiStyle;
+     public GUIStyle hintEnabledGuiStyle;
+     public GUIStyle hintDisabledGuiStyle;
+     public GUIStyle exitGuiStyle;
+     public GUIStyle textGuiStile;
+     public GUIStyle windowGuiStyle;
     void OnGUI () {
-        GUI.skin = customSkin;
+        //GUI.skin = customSkin;
         if(show) {
         if(!showHint) {
             windowRect = new Rect ((Screen.width - 1000)/2-500, (Screen.height - 800)/2, 1000, 800);
         } else {
             windowRect = new Rect ((Screen.width - 1000)/2-500, (Screen.height - 800)/2, 1000+1000, 800);
         }
-        windowRect = GUI.Window (0, windowRect, DialogWindow, "Solve it!!!");
+        windowRect = GUI.Window (0, windowRect, DialogWindow, "", windowGuiStyle);//"Solve it!!!"
         }
     }
     // This is the actual window.
@@ -110,13 +116,13 @@ public class TriggerEnter : MonoBehaviour
         if (showHint) {
             GUI.DrawTexture(new Rect(5+1000,y, 1000-10, hintHeight), aTexture2DHint, ScaleMode.ScaleToFit);    
         }
-         userAnswer = GUI.TextField(new Rect(5, y+answersHeight+questionHeight+10, 900-10, 20), userAnswer, 25);
+         userAnswer = GUI.TextField(new Rect(5, y+answersHeight+questionHeight+10, 900-10, 20), userAnswer, 25, textGuiStile);
 /*         if(GUI.Button(new Rect(5,y+25+answersHeight+questionHeight, 1000/2 - 10, 20), "Restart"))
         {
             Application.LoadLevel (0);
             show = false;
         }
- */        if(GUI.Button(new Rect(900,y+answersHeight+questionHeight+10, 100 - 10, 20), "Answer"))
+ */        if(GUI.Button(new Rect(900,y+answersHeight+questionHeight+10, 100 - 10, 20), "", answerGuiStyle)) //answer
         {
            if(userAnswer != rightAnswer) {
                Application.Quit();
@@ -126,12 +132,17 @@ public class TriggerEnter : MonoBehaviour
            userAnswer = "Enter Answer Here";
            }
         }
-        if(GUI.Button(new Rect(5,y+answersHeight+questionHeight+55, 1000 - 10, 20), "Hint"))
+        if(showHintGlobalChange){
+        if(GUI.Button(new Rect(5+450,y+answersHeight+questionHeight+55, 450 - 10, 20), "", hintEnabledGuiStyle)) //hint
         {
-            showHint = !showHint;
+             showHint = !showHint;
+        }
+        }
+        else{
+        if(GUI.Button(new Rect(5+450,y+answersHeight+questionHeight+55, 450 - 10, 20), "", hintDisabledGuiStyle)){} //hint    
         }
 
-        if(GUI.Button(new Rect(5,y+answersHeight+questionHeight+95, 1000 - 10, 20), "Exit"))
+        if(GUI.Button(new Rect(5,y+answersHeight+questionHeight+55, 450 - 10, 20), "Exit")) //exit
         {
            Application.Quit();
            show = false;
@@ -144,12 +155,6 @@ public class TriggerEnter : MonoBehaviour
     {
         show = true;
     }
-    public void Hint()
-    {
-        showHint = false;
-    }
-    
-
  
 
     public void CreateSchema() {
