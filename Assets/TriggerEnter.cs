@@ -65,7 +65,7 @@ public class TriggerEnter : MonoBehaviour
      byte[] filedataQuestion = new byte[5500000];
      byte[] filedataAnswer = new byte[5500000];
      byte[] filedataHint = new byte[5500000];
-     public string userAnswer = "Enter Answer Here";
+     public string userAnswer = "Введите ответ";
      public string rightAnswer;
      private string dbPath;
      public int taskNum;
@@ -137,7 +137,7 @@ public class TriggerEnter : MonoBehaviour
            show = false;
            ScoreScript.scoreValue += 1;
            PlayerController.MOVEMENT_BASE_SPEED = PRIMARY_MOVEMENT_BASE_SPEED;
-           userAnswer = "Enter Answer Here";
+           userAnswer = "Введите ответ";
            }
         }
         if(showHintGlobalChange){
@@ -150,7 +150,7 @@ public class TriggerEnter : MonoBehaviour
         if(GUI.Button(new Rect(5+450,y+answersHeight+questionHeight+55, 450 - 10, 20), "", hintDisabledGuiStyle)){} //hint    
         }
 
-        if(GUI.Button(new Rect(5,y+answersHeight+questionHeight+55, 450 - 10, 20), "Exit")) //exit
+        if(GUI.Button(new Rect(5,y+answersHeight+questionHeight+55, 450 - 10, 20), "Выход")) //exit
         {
            Application.Quit();
            show = false;
