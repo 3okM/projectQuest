@@ -37,6 +37,7 @@ public class TriggerEnter : MonoBehaviour
             aTexture2DAnswer.LoadImage(filedataAnswer); */
             aTexture2DHint = new Texture2D(900, 800);
             aTexture2DHint.LoadImage(filedataHint);
+            PlayerController.MOVEMENT_BASE_SPEED = 0;
 
         /* string filepathQuestion = @"C:\Users\KostyaO\MyFirstGame\q_1.png";
         if (File.Exists(filepathQuestion)) {
@@ -52,6 +53,7 @@ public class TriggerEnter : MonoBehaviour
      // Only show it if needed.
      private Rect windowRect = new Rect ((Screen.width - 1000)/2-500, (Screen.height - 800)/2, 1000, 800);
      private bool show = false;
+     private float PRIMARY_MOVEMENT_BASE_SPEED = PlayerController.MOVEMENT_BASE_SPEED;
      public bool showHint = true;
      public bool showHintGlobalChange = true;
      public int questionHeight = 800;
@@ -74,16 +76,20 @@ public class TriggerEnter : MonoBehaviour
      public GUIStyle hintDisabledGuiStyle;
      public GUIStyle exitGuiStyle;
      public GUIStyle textGuiStile;
-     public GUIStyle windowGuiStyle;
+     public GUIStyle windowGuiStyleBig;
+     public GUIStyle windowGuiStyleSmall;
     void OnGUI () {
         //GUI.skin = customSkin;
         if(show) {
         if(!showHint) {
+            //windowRect = new Rect ((Screen.width - 500)/2-250, (Screen.height - 800)/2, 1000, 800);
             windowRect = new Rect ((Screen.width - 1000)/2-500, (Screen.height - 800)/2, 1000, 800);
+                    windowRect = GUI.Window (0, windowRect, DialogWindow, "", windowGuiStyleSmall);
         } else {
             windowRect = new Rect ((Screen.width - 1000)/2-500, (Screen.height - 800)/2, 1000+1000, 800);
+        windowRect = GUI.Window (0, windowRect, DialogWindow, "", windowGuiStyleBig);  
         }
-        windowRect = GUI.Window (0, windowRect, DialogWindow, "", windowGuiStyle);//"Solve it!!!"
+//        windowRect = GUI.Window (0, windowRect, DialogWindow, "", windowGuiStyle);//"Solve it!!!"
         }
     }
     // This is the actual window.
@@ -129,6 +135,8 @@ public class TriggerEnter : MonoBehaviour
            } 
            else {
            show = false;
+           ScoreScript.scoreValue += 1;
+           PlayerController.MOVEMENT_BASE_SPEED = PRIMARY_MOVEMENT_BASE_SPEED;
            userAnswer = "Enter Answer Here";
            }
         }
@@ -146,6 +154,7 @@ public class TriggerEnter : MonoBehaviour
         {
            Application.Quit();
            show = false;
+           PlayerController.MOVEMENT_BASE_SPEED = PRIMARY_MOVEMENT_BASE_SPEED;
         }
 
     }
