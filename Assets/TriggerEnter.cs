@@ -37,7 +37,9 @@ public class TriggerEnter : MonoBehaviour
             aTexture2DAnswer.LoadImage(filedataAnswer); */
             aTexture2DHint = new Texture2D(900, 800);
             aTexture2DHint.LoadImage(filedataHint);
+            if(GlobalShow){
             PlayerController.MOVEMENT_BASE_SPEED = 0;
+            }
 
         /* string filepathQuestion = @"C:\Users\KostyaO\MyFirstGame\q_1.png";
         if (File.Exists(filepathQuestion)) {
@@ -55,6 +57,7 @@ public class TriggerEnter : MonoBehaviour
      private bool show = false;
      private float PRIMARY_MOVEMENT_BASE_SPEED = PlayerController.MOVEMENT_BASE_SPEED;
      public bool showHint = true;
+     public bool GlobalShow = true;
      public bool showHintGlobalChange = true;
      public int questionHeight = 800;
      public int hintHeight = 100;
@@ -81,6 +84,7 @@ public class TriggerEnter : MonoBehaviour
     void OnGUI () {
         //GUI.skin = customSkin;
         if(show) {
+        if(GlobalShow){
         if(!showHint) {
             //windowRect = new Rect ((Screen.width - 500)/2-250, (Screen.height - 800)/2, 1000, 800);
             windowRect = new Rect ((Screen.width - 1000)/2-500, (Screen.height - 800)/2, 1000, 800);
@@ -90,6 +94,7 @@ public class TriggerEnter : MonoBehaviour
         windowRect = GUI.Window (0, windowRect, DialogWindow, "", windowGuiStyleBig);  
         }
 //        windowRect = GUI.Window (0, windowRect, DialogWindow, "", windowGuiStyle);//"Solve it!!!"
+        }
         }
     }
     // This is the actual window.
@@ -131,10 +136,11 @@ public class TriggerEnter : MonoBehaviour
  */        if(GUI.Button(new Rect(900,y+answersHeight+questionHeight+10, 100 - 10, 20), "", answerGuiStyle)) //answer
         {
            if(userAnswer != rightAnswer) {
-               Application.Quit();
+//               Application.Quit();
            } 
            else {
            show = false;
+           GlobalShow = !GlobalShow;
            ScoreScript.scoreValue += 1;
            PlayerController.MOVEMENT_BASE_SPEED = PRIMARY_MOVEMENT_BASE_SPEED;
            userAnswer = "Введите ответ";
@@ -152,7 +158,7 @@ public class TriggerEnter : MonoBehaviour
 
         if(GUI.Button(new Rect(5,y+answersHeight+questionHeight+55, 450 - 10, 20), "Выход")) //exit
         {
-           Application.Quit();
+           //Application.Quit();
            show = false;
            PlayerController.MOVEMENT_BASE_SPEED = PRIMARY_MOVEMENT_BASE_SPEED;
         }
