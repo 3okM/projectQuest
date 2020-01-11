@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class VolumeValueChange : MonoBehaviour
 {
@@ -17,5 +15,7 @@ public class VolumeValueChange : MonoBehaviour
     }
     public void SetVolume(float vol){
         musicVolume = vol;
+        DataHolder.Set(vol);
+        Debug.Log("SetVolume" + vol);
     }
 }
